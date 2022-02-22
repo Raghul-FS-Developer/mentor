@@ -5,7 +5,8 @@ const { dbUrl, mongodb, MongoClient, dbNAme } = require("../dbConfig");
 router.get("/", async (req, res) => {
   const client = await MongoClient.connect(dbUrl);
   try {
-    let db = await client.db(dbNAme);
+    res.json({
+      message:"working"})
   } catch (error) {
     console.log(error);
   } finally {
