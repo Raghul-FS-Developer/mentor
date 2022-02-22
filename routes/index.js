@@ -58,49 +58,45 @@ router.post("/:id", async (req, res) => {
       .collection("mentor")
       .findOne({ _id: mongodb.ObjectId(mentorid) });
 
-     if(result){
-       
-       await db.collection("mentor").updateOne({ _id: mongodb.ObjectId(mentorid)},{$set:{studentids:req.body.studentid}})
-      console.log("student assigned")
+     
+
+    if (result) {
+      console.log("mentor present");
+      const result1 = await db
+        .collection("students")
+        .findOne({ _id: mongodb.ObjectId(req.body.studentid) });
+      if (result1) {
+        console.log("student present");
+
+        const result2 = await db
+          .collection("mentor")
+          .findOne({
+            studentIds: req.body.studentid
+          });
+        if (result2) {
+          console.log("student has a mentor");
+          res.json({
+            message: "student has a mentor",
+          });
+        } else {
+          await db
+            .collection("mentor")
+            .updateOne(
+              { _id: mongodb.ObjectId(mentorid) },
+              { $push: { studentIds: req.body.studentid } }
+            );
+          res.json({
+            message: "student assigned to the mentor successfully",
+          });
+          console.log("student assigned to the mentor successfully");
+        }
+      } else {
+        console.log("invalid student ");
+        res.json({
+          message: "invalid student",
+        });
       }
-
-//     if (result) {
-//       console.log("mentor present");
-//       const result1 = await db
-//         .collection("students")
-//         .findOne({ _id: mongodb.ObjectId(req.body.studentid) });
-//       if (result1) {
-//         console.log("student present");
-
-//         const result2 = await db
-//           .collection("mentor")
-//           .findOne({
-//             studentIds: req.body.studentid
-//           });
-//         if (result2) {
-//           console.log("student has a mentor");
-//           res.json({
-//             message: "student has a mentor",
-//           });
-//         } else {
-//           await db
-//             .collection("mentor")
-//             .updateOne(
-//               { _id: mongodb.ObjectId(mentorid) },
-//               { $set: { studentIds: req.body.studentid } }
-//             );
-//           res.json({
-//             message: "student assigned to the mentor successfully",
-//           });
-//           console.log("student assigned to the mentor successfully");
-//         }
-//       } else {
-//         console.log("invalid student ");
-//         res.json({
-//           message: "invalid student",
-//         });
-//       }
-//     } 
+    } 
 else {
       console.log("invalid mentor");
       res.json({
