@@ -56,15 +56,13 @@ router.post("/:id", async (req, res) => {
     const db = await client.db(dbNAme);
     const result = await db
       .collection("mentor")
-      .findOne({ _id: mongodb.ObjectId(mentorid) });
-
-     
-
+      .findOne({ _id: mongodb.ObjectId(mentorid) })
+ 
     if (result) {
       console.log("mentor present");
       const result1 = await db
         .collection("students")
-        .findOne({ _id: mongodb.ObjectId(req.body.studentid) });
+        .findOne({ _id: mongodb.ObjectId(req.body.studentid) })
       if (result1) {
         console.log("student present");
 
